@@ -1,5 +1,5 @@
 import {
-  WASocket,
+  AnyWASocket,
   BinaryNode,
   Contact as BContact
 } from "@adiwajshing/baileys";
@@ -16,7 +16,7 @@ import { logger } from "../../utils/logger";
 import createOrUpdateBaileysService from "../BaileysServices/CreateOrUpdateBaileysService";
 import CreateMessageService from "../MessageServices/CreateMessageService";
 
-type Session = WASocket & {
+type Session = AnyWASocket & {
   id?: number;
   store?: Store;
 };

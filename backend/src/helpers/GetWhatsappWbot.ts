@@ -1,8 +1,8 @@
-import { WASocket } from "@adiwajshing/baileys";
+import { AnyWASocket } from "@adiwajshing/baileys";
 import { Store } from "../libs/store";
 import { getWbot } from "../libs/wbot";
 import Whatsapp from "../models/Whatsapp";
-type Session = WASocket & {
+type Session = AnyWASocket & {
   id?: number;
   store?: Store;
 };

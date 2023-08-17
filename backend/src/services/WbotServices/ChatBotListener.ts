@@ -1,4 +1,4 @@
-import { WASocket, proto } from "@adiwajshing/baileys";
+import { AnyWASocket, proto } from "@adiwajshing/baileys";
 import Contact from "../../models/Contact";
 import Ticket from "../../models/Ticket";
 import { Store } from "../../libs/store";
@@ -16,7 +16,7 @@ import Chatbot from "../../models/Chatbot";
 import User from "../../models/User";
 import Setting from "../../models/Setting";
 
-type Session = WASocket & {
+type Session = AnyWASocket & {
   id?: number;
   store?: Store;
 };

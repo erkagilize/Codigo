@@ -1,18 +1,18 @@
 import makeWASocket, {
-  
+  AnyWASocket,
   AuthenticationState,
   DisconnectReason,
   fetchLatestBaileysVersion,
-  
+  LegacyAuthenticationCreds,
   makeInMemoryStore,
-  WASocket
+  makeWALegacySocket
 } from "@adiwajshing/baileys";
 
 import { Boom } from "@hapi/boom";
 import MAIN_LOGGER from "@adiwajshing/baileys/lib/Utils/logger";
 import Whatsapp from "../models/Whatsapp";
 import { logger } from "../utils/logger";
-
+import authStateLegacy from "../helpers/authStateLegacy";
 import authState from "../helpers/authState";
 import AppError from "../errors/AppError";
 import { getIO } from "./socket";
@@ -23,7 +23,7 @@ import DeleteBaileysService from "../services/BaileysServices/DeleteBaileysServi
 const loggerBaileys = MAIN_LOGGER.child({});
 loggerBaileys.level = "error";
 
-type Session = WASocket & {
+type Session = AnyWASocket & {
   id?: number;
   store?: Store;
 };
@@ -85,24 +85,23 @@ export const initWbot = async (whatsapp: Whatsapp): Promise<Session> => {
           logger: loggerBaileys
         });
 
+        const { state, saveState } = isMultidevice
+          ? await authState(whatsapp)
+          : await authStateLegacy(whatsapp);
 
-        
-        
-
-
-        wsocket = makeWASocket({
+        wsocket = isMultidevice
+          ? makeWASocket({
               logger: loggerBaileys,
               printQRInTerminal: false,
               auth: state as AuthenticationState,
-              version
+              version: [2,2323,4]
             })
-
-          
-
-
-
-
-
+          : makeWALegacySocket({
+              logger: loggerBaileys,
+              printQRInTerminal: false,
+              auth: state as LegacyAuthenticationCreds,
+              version
+            });
 
         wsocket.ev.on(
           "connection.update",
